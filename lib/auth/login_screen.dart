@@ -81,10 +81,14 @@ class _LoginScreenState extends State<LoginScreen> {
         MaterialPageRoute(builder: (context) => const SignupScreen()),
       );
 
-  goToHome(BuildContext context) => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => HomeScreen()),
-      );
+  void goToHome(BuildContext context, String category) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => HomeScreen(category: category),
+      ),
+    );
+  }
 
   _login() async {
     final user =
@@ -92,7 +96,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (user != null) {
       log("User Logged In");
-      goToHome(context);
+      goToHome(context, "technology");
     } else {
       log("Login failed");
       ScaffoldMessenger.of(context).showSnackBar(
@@ -105,7 +109,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     if (userCredential != null) {
       log("User Logged In with Google");
-      goToHome(context);
+      goToHome(context, "technology");
     } else {
       log("Google Sign-In failed");
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
