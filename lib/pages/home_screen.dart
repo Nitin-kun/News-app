@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_database/firebase_database.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import 'categories_page.dart';
 
 class HomeScreen extends StatefulWidget {
   final String category;
@@ -54,56 +57,64 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            ListView.builder(
-              shrinkWrap: true,
-              physics: NeverScrollableScrollPhysics(),
-              itemCount: categoryData.length,
-              itemBuilder: (context, index) {
-                final item = categoryData[index];
-                return Card(
-                  child: InkWell(
-                    onTap: () {
-                      // Handle item tap
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(16),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            item['title'],
-                            style: TextStyle(
-                              fontSize: 28,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          SizedBox(height: 8),
-                          Text(
-                            item['description'] ?? '',
-                            style: TextStyle(fontSize: 16),
-                          ),
-                          SizedBox(height: 8),
-                          item['images'] != null
-                              ? Image.network(
-                                  item['images'],
-                                  height: 100,
-                                  width: 100,
-                                  fit: BoxFit.cover,
-                                )
-                              : SizedBox(), // Add SizedBox if images are null
-                        ],
-                      ),
+      resizeToAvoidBottomInset: false,
+      body: PageView.builder(
+        scrollDirection: Axis.vertical,
+        itemCount: categoryData.length,
+        itemBuilder: (context, index) {
+          final item = categoryData[index];
+          return GestureDetector(
+            onHorizontalDragEnd: (dragDetail) {
+              if (dragDetail.velocity.pixelsPerSecond.dx < 1) {
+                launchUrl(Uri.parse(item['url']),
+                    mode: LaunchMode.inAppWebView);
+                print(item['url']);
+              } else {
+                Navigator.push(context,
+                    MaterialPageRoute(builder: (context) => CategoriesPage()));
+              }
+            },
+            child: Container(
+              padding:
+                  EdgeInsets.only(top: 32, left: 24, right: 24, bottom: 12),
+              child: Column(
+                children: [
+                  Text(
+                    item['title'],
+                    style: TextStyle(
+                      fontSize: 28,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
-                );
-              },
+
+                  SizedBox(height: 8),
+                  item['images'] != null
+                      ? Image.network(
+                          item['images'],
+                          height: MediaQuery.of(context).size.height * 0.3,
+                          width: MediaQuery.of(context).size.height * 0.3,
+                          fit: BoxFit.cover,
+                        )
+                      : SizedBox(),
+                  SizedBox(height: 8),
+                  Text(
+                    item['description'] ?? '',
+                    style: TextStyle(fontSize: 16),
+                  ), // Add SizedBox if images are null
+                ],
+              ),
             ),
-          ],
-        ),
+          );
+        },
       ),
     );
+  }
+
+  _launchURL(String? link) async {
+    if (await canLaunchUrl(link! as Uri)) {
+      await launchUrl(link as Uri);
+    } else {
+      throw 'Could not launch $link';
+    }
   }
 }
