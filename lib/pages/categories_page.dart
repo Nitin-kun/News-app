@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:news_app/widgets/button.dart';
 import '../auth/login_screen.dart';
 import 'home_screen.dart';
-
-import 'package:flutter/material.dart';
 
 class CategoriesPage extends StatelessWidget {
   @override

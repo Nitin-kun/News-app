@@ -64,30 +64,29 @@ class _HomeScreenState extends State<HomeScreen> {
         itemBuilder: (context, index) {
           final item = categoryData[index];
           return GestureDetector(
-            onHorizontalDragEnd: (dragDetail) {
-              if (dragDetail.velocity.pixelsPerSecond.dx < 1) {
+            onHorizontalDragUpdate: (dragDetail) {
+              if (dragDetail.delta.dx < 0) {
                 launchUrl(Uri.parse(item['url']),
                     mode: LaunchMode.inAppWebView);
-                print(item['url']);
+                print(item.keys);
               } else {
                 Navigator.push(context,
                     MaterialPageRoute(builder: (context) => CategoriesPage()));
               }
             },
             child: Container(
-              padding:
-                  EdgeInsets.only(top: 32, left: 24, right: 24, bottom: 12),
+              padding: const EdgeInsets.only(
+                  top: 32, left: 24, right: 24, bottom: 12),
               child: Column(
                 children: [
                   Text(
                     item['title'],
-                    style: TextStyle(
-                      fontSize: 28,
+                    style: const TextStyle(
+                      fontSize: 22,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
-
-                  SizedBox(height: 8),
+                  const SizedBox(height: 8),
                   item['images'] != null
                       ? Image.network(
                           item['images'],
@@ -95,12 +94,12 @@ class _HomeScreenState extends State<HomeScreen> {
                           width: MediaQuery.of(context).size.height * 0.3,
                           fit: BoxFit.cover,
                         )
-                      : SizedBox(),
-                  SizedBox(height: 8),
+                      : const SizedBox(),
+                  const SizedBox(height: 8),
                   Text(
                     item['description'] ?? '',
-                    style: TextStyle(fontSize: 16),
-                  ), // Add SizedBox if images are null
+                    style: const TextStyle(fontSize: 16),
+                  ),
                 ],
               ),
             ),
