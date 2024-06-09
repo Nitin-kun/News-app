@@ -67,22 +67,31 @@ class _HomeScreenState extends State<HomeScreen> {
             onHorizontalDragUpdate: (dragDetail) {
               if (dragDetail.delta.dx < 0) {
                 launchUrl(Uri.parse(item['url']),
-                    mode: LaunchMode.inAppWebView);
+                    mode: LaunchMode.externalApplication);
                 print(item.keys);
               } else {
-                Navigator.push(context,
-                    MaterialPageRoute(builder: (context) => CategoriesPage()));
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => CategoriesPage()),
+                );
               }
             },
             child: Container(
+              color: Color.fromARGB(255, 255, 255, 255),
+              height: double.infinity,
+              width: double.infinity,
               padding: const EdgeInsets.only(
-                  top: 32, left: 24, right: 24, bottom: 12),
+                top: 32,
+                left: 24,
+                right: 24,
+                bottom: 12,
+              ),
               child: Column(
                 children: [
                   Text(
                     item['title'],
-                    style: const TextStyle(
-                      fontSize: 22,
+                    style: TextStyle(
+                      fontSize: MediaQuery.of(context).size.height * 0.03,
                       fontWeight: FontWeight.bold,
                     ),
                   ),
@@ -98,7 +107,8 @@ class _HomeScreenState extends State<HomeScreen> {
                   const SizedBox(height: 8),
                   Text(
                     item['description'] ?? '',
-                    style: const TextStyle(fontSize: 16),
+                    style: TextStyle(
+                        fontSize: MediaQuery.of(context).size.height * 0.02),
                   ),
                 ],
               ),
